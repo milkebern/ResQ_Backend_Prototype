@@ -1,0 +1,238 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SQLite;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
+
+namespace resQbackEnd
+{
+    internal class App
+    {
+        internal App() {
+            Launch();
+        }
+        private static void Launch() {
+            switch (AppHandle._sessionValue)
+            {
+                case 1111: // debugging
+                    Console.WriteLine("Database and Table exists: " + DataHandler.checkDatabase());
+                    if (!DataHandler.checkDatabase())
+                    {
+                        Console.WriteLine("Creating Database...");
+                        DataHandler.createDatabase();
+                        Console.WriteLine("Creating Table...");
+                        DataHandler.createTable();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Input a Name(Press [Enter] to skip): ");
+                        string _inputName = Console.ReadLine();
+
+                        Console.WriteLine("Input Contact's Number(11 digits, all decimals): ");
+                        bool _correctNumberFormat = false;
+
+                        int _inputNumber = 0; // Loop below checks correct format
+                        while (!_correctNumberFormat)
+                        {
+                            string _tempInputNumber = string.Empty;
+                            try
+                            {
+                                _tempInputNumber = Console.ReadLine();
+                                Console.Write(_tempInputNumber);
+                                _inputNumber = Convert.ToInt32(_tempInputNumber);
+                                Console.Write("Converted!!");
+                                _correctNumberFormat = true;
+                            }
+                            catch
+                            {
+                                // Put Console.Clears into comments if you're using VSCode
+                                //Console.Clear();
+                                Console.WriteLine(
+                                    //$"Input a Name(Press [Enter] to skip): {_inputName}\n" +
+                                    "Input Contact's Number(11 digits, all decimals): WRONG FORMAT"
+                                    );
+                                Thread.Sleep(800);
+                                //Console.Clear();
+                                /*
+                                Console.WriteLine(
+                                    $"Input a Name(Press [Enter] to skip): {_inputName}\n" +
+                                    "Input Contact's Number(11 digits, all decimals):"
+                                    );
+                                */
+                                _correctNumberFormat = false;
+                            }
+                        }
+
+                        var _contact = new Contact(_inputName, _inputNumber, 000);
+                    }
+                    break;
+                case 0000: // Security Pin State
+                    
+                    break;
+                case 0001: // Null App Process
+
+                    break;
+
+            }
+        }
+    }
+    public static class AppHandle
+    {
+        public static int _sessionValue = 1111;
+        /* Used for pages and overall app state
+         * Session Values:
+         * 1--- = Already initiated, app launching, awaiting internal/external action
+         * 0--- = App opened for the first time
+         * --00 = Security Pin
+         * --1- = Front Page(0,1)
+         * --2- = Setup(0,1,2,3,4)
+         * --3- = Security Backup(0,1)
+         * --01 = App Process(while active)
+         * --02 = Main Page
+         * --03 = Background Run
+         * -0-- = Pending/Awaiting OTP(0,1)
+         */
+        public static void frontPage() { }
+        public static void setup(int mode) { }
+        public static void mainPage(int state) { }
+        public static void secBackup(int mode)
+        {
+            if (mode == 0)
+            {
+
+            }
+        }
+        public static void voidBridge(int typing) { }
+    }
+    public static class FrontHandler {
+        public static void displayBridge() { }
+    }
+    public static class ApiHandler { }
+    public static class DataHandler {
+        private const string _dataFileName = "userData.db";
+        private const string connectionString = $"Data Source={_dataFileName};Version=3;";
+        
+        public static void createDatabase()
+        {
+            try
+            {
+                if (!File.Exists(_dataFileName))
+                {
+                    SQLiteConnection.CreateFile(_dataFileName);
+                    Console.Write("Database Created!");
+                }
+                else
+                {
+                    Console.Write("Database already exists.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Error: " + ex);
+            }
+        }
+        public static bool checkDatabase()
+        {
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+            try
+            {
+                if (File.Exists(_dataFileName))
+                {
+                    using (conn)
+                    {
+                        conn.Open();
+                        if (tableExists(conn, "Contacts"))
+                        {
+                            conn.Close();
+                            return true;
+                        }
+                        else
+                        {
+                            conn.Close();
+                            return false;
+                        }
+                    }
+                }
+                else return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nAn error occurred: " + ex.Message);
+
+                return false;
+            }
+        }
+
+        private static bool tableExists(SQLiteConnection connection, string tableName)
+        {
+            string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName";
+
+            using (var command = new SQLiteCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@tableName", tableName);
+                object result = command.ExecuteScalar();
+                return result != null;
+            }
+        }
+
+        public static void createTable()
+        {
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            string sql = @"
+                CREATE TABLE Contacts (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT,
+                    Number INTEGER NOT NULL,
+                    ContactState INTEGER NOT NULL
+                );";
+
+            using (var command = new SQLiteCommand(sql, conn))
+            {
+                command.ExecuteNonQuery();
+            }
+            Console.WriteLine("'Contacts' table created!");
+            conn.Close();
+        }
+
+        // Contacts
+        public static void createContact() { }
+        public static void deleteContact() { }
+        public static void verifyContact() { }
+        public static void updateContact() { }
+    }
+
+
+    public class Contact
+    {
+        private string _name;
+
+        /*
+         * For null-value Names, add '%%'
+         */
+
+        private int _number;
+        private int _contactState;
+
+        /*
+         * contactState:
+         * 0 - Unconfirmed Contact Number
+         * 1 - OTP-Confirmed Contact Number
+         * 2 - Personal Number
+         * 3 - Hotline
+         */
+
+        public Contact(string name, int number, int contactState)
+        {
+            _name = name;
+            _number = number;
+            if (contactState < 0 || contactState > 3) _contactState = 0;
+            else _contactState = contactState;
+            
+        }
+
+    }
+}
