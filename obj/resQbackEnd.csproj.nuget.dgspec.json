@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj": {}
+    "c:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj": {}
   },
   "projects": {
-    "C:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj": {
+    "c:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj",
+        "projectUniqueName": "c:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj",
         "projectName": "resQbackEnd",
-        "projectPath": "C:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj",
+        "projectPath": "c:\\Users\\milke\\source\\repos\\resQbackEnd\\resQbackEnd.csproj",
         "packagesPath": "C:\\Users\\milke\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\milke\\source\\repos\\resQbackEnd\\obj\\",
+        "outputPath": "c:\\Users\\milke\\source\\repos\\resQbackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

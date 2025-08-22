@@ -225,7 +225,7 @@ namespace resQbackEnd
                 Console.ReadLine();
                 command.ExecuteNonQuery();
             }
-            Console.WriteLine("'Contacts' table created!");
+            Console.WriteLine("Contact Saved!");
             conn.Close();
         }
         public static void deleteContact() { }
