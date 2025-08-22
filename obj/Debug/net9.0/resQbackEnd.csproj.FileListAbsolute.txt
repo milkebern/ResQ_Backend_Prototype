@@ -40,3 +40,4 @@ c:\Users\milke\source\repos\resQbackEnd\obj\Debug\net9.0\refint\resQbackEnd.dll
 c:\Users\milke\source\repos\resQbackEnd\obj\Debug\net9.0\resQbackEnd.pdb
 c:\Users\milke\source\repos\resQbackEnd\obj\Debug\net9.0\resQbackEnd.genruntimeconfig.cache
 c:\Users\milke\source\repos\resQbackEnd\obj\Debug\net9.0\ref\resQbackEnd.dll
+c:\Users\milke\source\repos\resQbackEnd\obj\Debug\net9.0\resQbackEnd.sourcelink.json

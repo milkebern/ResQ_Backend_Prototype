@@ -34,7 +34,7 @@ namespace resQbackEnd
                         Console.WriteLine("Input Contact's Number(11 digits, all decimals): ");
                         bool _correctNumberFormat = false;
 
-                        int _inputNumber = 0; // Loop below checks correct format
+                        long _inputNumber = 0; // Loop below checks correct format
                         while (!_correctNumberFormat)
                         {
                             string _tempInputNumber = string.Empty;
@@ -42,8 +42,10 @@ namespace resQbackEnd
                             {
                                 _tempInputNumber = Console.ReadLine();
                                 Console.Write(_tempInputNumber);
-                                _inputNumber = Convert.ToInt32(_tempInputNumber);
+
+                                _inputNumber = Convert.ToInt64(_tempInputNumber);
                                 Console.Write("Converted!!");
+
                                 _correctNumberFormat = true;
                             }
                             catch
@@ -67,6 +69,7 @@ namespace resQbackEnd
                         }
 
                         var _contact = new Contact(_inputName, _inputNumber, 000);
+                        DataHandler.createContact(_contact);
                     }
                     break;
                 case 0000: // Security Pin State
@@ -186,7 +189,7 @@ namespace resQbackEnd
                 CREATE TABLE Contacts (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT,
-                    Number INTEGER NOT NULL,
+                    Number BIGINT NOT NULL,
                     ContactState INTEGER NOT NULL
                 );";
 
@@ -199,7 +202,32 @@ namespace resQbackEnd
         }
 
         // Contacts
-        public static void createContact() { }
+        public static void createContact(Contact contact)
+        {
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            string sql = @"
+                INSERT INTO Contacts (Name, Number, ContactState)
+                VALUES (@name,@number,@cstate);";
+
+            using (var command = new SQLiteCommand(sql, conn))
+            {
+                command.Parameters.AddWithValue("@name", contact.Name());
+                command.Parameters.AddWithValue("@number", contact.Number());
+                command.Parameters.AddWithValue("@cstate", contact.ContactState());
+                Console.Write(
+                    @$"
+                        Contact's Name: {contact.Name()}
+                        Contact's Number: {contact.Number()}
+                        Contact's State: {contact.ContactState()}
+                    "
+                );
+                Console.ReadLine();
+                command.ExecuteNonQuery();
+            }
+            Console.WriteLine("'Contacts' table created!");
+            conn.Close();
+        }
         public static void deleteContact() { }
         public static void verifyContact() { }
         public static void updateContact() { }
@@ -214,7 +242,7 @@ namespace resQbackEnd
          * For null-value Names, add '%%'
          */
 
-        private int _number;
+        private long _number;
         private int _contactState;
 
         /*
@@ -225,14 +253,17 @@ namespace resQbackEnd
          * 3 - Hotline
          */
 
-        public Contact(string name, int number, int contactState)
+        public Contact(string name, long number, int contactState)
         {
             _name = name;
             _number = number;
             if (contactState < 0 || contactState > 3) _contactState = 0;
             else _contactState = contactState;
-            
+
         }
 
+        public string Name() { return _name; }
+        public long Number() { return _number; }
+        public int ContactState() { return _contactState; }
     }
 }
