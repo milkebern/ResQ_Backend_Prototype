@@ -15,7 +15,7 @@ namespace resQbackEnd
             Launch();
         }
         private static void Launch() {
-            switch (AppHandle._sessionValue)
+            switch (AppHandle._sessionValue)//Refer to comments in AppHandle class for _sessionvalue
             {
                 case 1111: // debugging
                     Console.WriteLine("Database and Table exists: " + DataHandler.checkDatabase());
@@ -43,27 +43,15 @@ namespace resQbackEnd
                                 _tempInputNumber = Console.ReadLine();
                                 Console.Write(_tempInputNumber);
 
-                                _inputNumber = Convert.ToInt64(_tempInputNumber);
-                                Console.Write("Converted!!");
+                                _inputNumber = Convert.ToInt64(_tempInputNumber); //Failed string-to-int conversion is thrown to catch block to retry input again
+                                if (Convert.ToString(_inputNumber).Length != 10 || Convert.ToString(_inputNumber)[9] != '9') int.Parse("wrong format"); //Checks if the 10-digit format with number 9 starting from the left
 
                                 _correctNumberFormat = true;
                             }
                             catch
                             {
-                                // Put Console.Clears into comments if you're using VSCode
-                                //Console.Clear();
-                                Console.WriteLine(
-                                    //$"Input a Name(Press [Enter] to skip): {_inputName}\n" +
-                                    "Input Contact's Number(11 digits, all decimals): WRONG FORMAT"
-                                    );
+                                Console.WriteLine("WRONG FORMAT");
                                 Thread.Sleep(800);
-                                //Console.Clear();
-                                /*
-                                Console.WriteLine(
-                                    $"Input a Name(Press [Enter] to skip): {_inputName}\n" +
-                                    "Input Contact's Number(11 digits, all decimals):"
-                                    );
-                                */
                                 _correctNumberFormat = false;
                             }
                         }
@@ -228,7 +216,21 @@ namespace resQbackEnd
             Console.WriteLine("Contact Saved!");
             conn.Close();
         }
-        public static void deleteContact() { }
+        public static void deleteContact(Contact contact)
+        {
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            string sql = @"
+                DELETE FROM Contacts WHERE Number=@number";
+
+            using (var command = new SQLiteCommand(sql, conn))
+            {
+                command.Parameters.AddWithValue("@number", contact.Number());
+                command.ExecuteNonQuery();
+            }
+            Console.WriteLine("Contact Saved!");
+            conn.Close();
+        }
         public static void verifyContact() { }
         public static void updateContact() { }
     }
