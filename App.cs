@@ -11,57 +11,19 @@ namespace resQbackEnd
 {
     internal class App
     {
-        internal App() {
+        internal App()
+        {
             Launch();
         }
-        private static void Launch() {
+        private static void Launch()
+        {
             switch (AppHandle._sessionValue)//Refer to comments in AppHandle class for _sessionvalue
             {
                 case 1111: // debugging
-                    Console.WriteLine("Database and Table exists: " + DataHandler.checkDatabase());
-                    if (!DataHandler.checkDatabase())
-                    {
-                        Console.WriteLine("Creating Database...");
-                        DataHandler.createDatabase();
-                        Console.WriteLine("Creating Table...");
-                        DataHandler.createTable();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Input a Name(Press [Enter] to skip): ");
-                        string _inputName = Console.ReadLine();
-
-                        Console.WriteLine("Input Contact's Number(11 digits, all decimals): ");
-                        bool _correctNumberFormat = false;
-
-                        long _inputNumber = 0; // Loop below checks correct format
-                        while (!_correctNumberFormat)
-                        {
-                            string _tempInputNumber = string.Empty;
-                            try
-                            {
-                                _tempInputNumber = Console.ReadLine();
-                                Console.Write(_tempInputNumber);
-
-                                _inputNumber = Convert.ToInt64(_tempInputNumber); //Failed string-to-int conversion is thrown to catch block to retry input again
-                                if (Convert.ToString(_inputNumber).Length != 10 || Convert.ToString(_inputNumber)[9] != '9') int.Parse("wrong format"); //Checks if the 10-digit format with number 9 starting from the left
-
-                                _correctNumberFormat = true;
-                            }
-                            catch
-                            {
-                                Console.WriteLine("WRONG FORMAT");
-                                Thread.Sleep(800);
-                                _correctNumberFormat = false;
-                            }
-                        }
-
-                        var _contact = new Contact(_inputName, _inputNumber, 000);
-                        DataHandler.createContact(_contact);
-                    }
+                    DebugControls.d2();
                     break;
                 case 0000: // Security Pin State
-                    
+
                     break;
                 case 0001: // Null App Process
 
@@ -98,14 +60,16 @@ namespace resQbackEnd
         }
         public static void voidBridge(int typing) { }
     }
-    public static class FrontHandler {
+    public static class FrontHandler
+    {
         public static void displayBridge() { }
     }
     public static class ApiHandler { }
-    public static class DataHandler {
+    public static class DataHandler
+    {
         private const string _dataFileName = "userData.db";
         private const string connectionString = $"Data Source={_dataFileName};Version=3;";
-        
+
         public static void createDatabase()
         {
             try
@@ -231,8 +195,24 @@ namespace resQbackEnd
             Console.WriteLine("Contact Saved!");
             conn.Close();
         }
-        public static void verifyContact() { }
-        public static void updateContact() { }
+        public static string generateOTP()
+        {
+            Random rnd = new Random();
+            string _strOTP = Convert.ToString(rnd.Next(0, 999));
+            string _strRet = _strOTP;
+            if (_strOTP.Length < 3)
+            {
+                string _zeroAdd = string.Empty;
+                for (int i = _strOTP.Length; i < 3; i++)
+                {
+                    _zeroAdd += "0";
+                }
+                return _zeroAdd + _strRet;
+            }
+            else return _strOTP;
+
+        }
+        public static void updateContact(Contact oldContact, Contact newContact) { }
     }
 
 
@@ -267,5 +247,62 @@ namespace resQbackEnd
         public string Name() { return _name; }
         public long Number() { return _number; }
         public int ContactState() { return _contactState; }
+    }
+
+    public static class DebugControls
+    {
+        public static void d2()
+        {
+            
+            for (int i = 0; i < 100; i++)
+            {
+                
+                Console.WriteLine(DataHandler.generateOTP());
+            }
+        }
+        public static void d1()
+        {
+            Console.WriteLine("Database and Table exists: " + DataHandler.checkDatabase());
+            if (!DataHandler.checkDatabase())
+            {
+                Console.WriteLine("Creating Database...");
+                DataHandler.createDatabase();
+                Console.WriteLine("Creating Table...");
+                DataHandler.createTable();
+            }
+            else
+            {
+                Console.WriteLine("Input a Name(Press [Enter] to skip): ");
+                string _inputName = Console.ReadLine();
+
+                Console.WriteLine("Input Contact's Number(11 digits, all decimals): ");
+                bool _correctNumberFormat = false;
+
+                long _inputNumber = 0; // True Contact Number, loop below checks correct format for temporary contact number
+                while (!_correctNumberFormat)
+                {
+                    string _tempInputNumber = string.Empty;
+                    try
+                    {
+                        _tempInputNumber = Console.ReadLine();
+                        Console.Write(_tempInputNumber);
+
+                        _inputNumber = Convert.ToInt64(_tempInputNumber); //Failed string-to-int conversion is thrown to catch block to retry input again
+                        if (Convert.ToString(_inputNumber).Length != 10 || Convert.ToString(_inputNumber)[9] != '9') int.Parse("wrong format"); //Checks if the 10-digit format with number 9 starting from the left
+
+                        _correctNumberFormat = true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("WRONG FORMAT");
+                        Thread.Sleep(800);
+                        _correctNumberFormat = false;
+                    }
+                }
+
+                var _contact = new Contact(_inputName, _inputNumber, 000);
+                DataHandler.createContact(_contact);
+            }
+        }
     }
 }
