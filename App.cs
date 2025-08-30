@@ -197,20 +197,18 @@ namespace resQbackEnd
         }
         public static string generateOTP()
         {
-            Random rnd = new Random();
-            string _strOTP = Convert.ToString(rnd.Next(0, 999));
-            string _strRet = _strOTP;
-            if (_strOTP.Length < 3)
+            Random rnd = new Random(); //New Random class object
+            string _strOTP = Convert.ToString(rnd.Next(1, 999)); //Genetares 0-999, 3 digit Number and converts it to string
+            if (_strOTP.Length < 3) //Code inside runs if the number generated is 1-2 digits 
             {
-                string _zeroAdd = string.Empty;
-                for (int i = _strOTP.Length; i < 3; i++)
+                string _zeroAdd = string.Empty; //String container for storing the 0s needed for the code to become 3 digit
+                for (int i = _strOTP.Length; i < 3; i++) //For loop to add the 0s depending on how many digit there is
                 {
-                    _zeroAdd += "0";
+                    _zeroAdd += "0"; // Adds the 0s into the container String
                 }
-                return _zeroAdd + _strRet;
+                return _zeroAdd + _strOTP; //Returns the value as a 3 digit string
             }
-            else return _strOTP;
-
+            else return _strOTP; // If the numbers are 3 digits already, returns the full value instead
         }
         public static void updateContact(Contact oldContact, Contact newContact) { }
     }
