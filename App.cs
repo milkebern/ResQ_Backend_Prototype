@@ -17,35 +17,64 @@ namespace resQbackEnd
         }
         private static void Launch()
         {
-            switch (AppHandle._sessionValue)//Refer to comments in AppHandle class for _sessionvalue
+            switch (AppHandle.fetchLastTwoDigit(AppHandle._sessionValue))//Refer to comments in AppHandle class for _sessionvalue
             {
-                case 1111: // debugging
+                case 99: // debugging, see DebugControls Class at the very bottom
                     DebugControls.d2();
                     break;
-                case 0000: // Security Pin State
+                case 00: // Security Pin State
 
                     break;
-                case 0001: // Null App Process
+                case 01: // Active App Process
 
                     break;
+                case 09: // Background App Process
 
+                    break;
+                case 10: // Front Page Initial Start
+
+                    break;
+                case 11: // Front Page Generic Start
+
+                    break;
+                case 20: // Initial Setup
+
+                    break;
+                case 21: // Edit Contact Mode
+
+                    break;
+                case 22: // User Edit Mode
+
+                    break;
+                case 23: // Widget Edit Mode
+
+                    break;
+                case 30: // Security Backup setup
+
+                    break;
+                case 31: // Secondary Pin/Action
+
+                    break;
+                case 40: // Main Page
+
+                    break;
             }
         }
     }
     public static class AppHandle
     {
-        public static int _sessionValue = 1111;
+        public static int _sessionValue = 0099;
         /* Used for pages and overall app state
          * Session Values:
          * 1--- = Already initiated, app launching, awaiting internal/external action
          * 0--- = App opened for the first time
          * --00 = Security Pin
          * --1- = Front Page(0,1)
-         * --2- = Setup(0,1,2,3,4)
+         * --2- = Setup(0,1,2,3)
          * --3- = Security Backup(0,1)
-         * --01 = App Process(while active)
-         * --02 = Main Page
-         * --03 = Background Run
+         * --4- = Main Page
+         * 0001 = In-App Process (Temporary)
+         * 0009 = Background Run
          * -0-- = Pending/Awaiting OTP(0,1)
          */
         public static void frontPage() { }
@@ -59,6 +88,12 @@ namespace resQbackEnd
             }
         }
         public static void voidBridge(int typing) { }
+        public static int fetchLastTwoDigit(int _input)
+        {
+            char _digitone = Convert.ToString(_input)[2];
+            char _digittwo = Convert.ToString(_input)[3];
+            return int.Parse(Convert.ToString(_digitone + _digittwo));
+        }
     }
     public static class FrontHandler
     {
@@ -194,6 +229,10 @@ namespace resQbackEnd
             }
             Console.WriteLine("Contact Deleted!");
             conn.Close();
+        }
+        public static void replaceContact(Contact contact)
+        {
+            // Do this next
         }
         public static string generateOTP()
         {
