@@ -192,7 +192,7 @@ namespace resQbackEnd
                 command.Parameters.AddWithValue("@number", contact.Number());
                 command.ExecuteNonQuery();
             }
-            Console.WriteLine("Contact Saved!");
+            Console.WriteLine("Contact Deleted!");
             conn.Close();
         }
         public static string generateOTP()
@@ -249,16 +249,22 @@ namespace resQbackEnd
 
     public static class DebugControls
     {
-        public static void d2()
+
+
+        public static void d3() //Deleting contacts
         {
             
+        }
+        public static void d2() //Generates 100 OTP codes, can't send anything to contact numbers yet
+        {
+
             for (int i = 0; i < 100; i++)
             {
-                
+
                 Console.WriteLine(DataHandler.generateOTP());
             }
         }
-        public static void d1()
+        public static void d1() //Initial debug, creates database and table, then asks for the initial contact number and saves it to the database, Contacts table
         {
             Console.WriteLine("Database and Table exists: " + DataHandler.checkDatabase());
             if (!DataHandler.checkDatabase())
