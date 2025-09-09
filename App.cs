@@ -230,9 +230,25 @@ namespace resQbackEnd
             Console.WriteLine("Contact Deleted!");
             conn.Close();
         }
-        public static void replaceContact(Contact contact)
+        public static void replaceContact(Contact contact, int Id)
         {
-            // Do this next
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            string sql = @$"
+                UPDATE Contacts
+                SET Name = @name, Number = @number, ContactState = @contactstate
+                WHERE Id = @id;";
+
+            using (var command = new SQLiteCommand(sql, conn))
+            {
+                command.Parameters.AddWithValue("@name", contact.Name());
+                command.Parameters.AddWithValue("@number", contact.Number());
+                command.Parameters.AddWithValue("@contactstate", contact.ContactState());
+                command.Parameters.AddWithValue("@id", Id);
+                command.ExecuteNonQuery();
+            }
+            Console.WriteLine("Contact Modified!");
+            conn.Close();
         }
         public static string generateOTP()
         {
@@ -288,8 +304,6 @@ namespace resQbackEnd
 
     public static class DebugControls
     {
-
-
         public static void d3() //Deleting contacts
         {
             
@@ -316,7 +330,7 @@ namespace resQbackEnd
             else
             {
                 Console.WriteLine("Input a Name(Press [Enter] to skip): ");
-                string _inputName = Console.ReadLine();
+                string? _inputName = Console.ReadLine();
 
                 Console.WriteLine("Input Contact's Number(11 digits, all decimals): ");
                 bool _correctNumberFormat = false;
@@ -324,7 +338,7 @@ namespace resQbackEnd
                 long _inputNumber = 0; // True Contact Number, loop below checks correct format for temporary contact number
                 while (!_correctNumberFormat)
                 {
-                    string _tempInputNumber = string.Empty;
+                    string? _tempInputNumber = string.Empty;
                     try
                     {
                         _tempInputNumber = Console.ReadLine();

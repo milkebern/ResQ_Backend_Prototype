@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("resQbackEnd")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+866360ce260223dfeb45de4cfc90225877c8d814")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb99ef65c7d6ab58d6c5ce75276bf512a258af28")]
 [assembly: System.Reflection.AssemblyProductAttribute("resQbackEnd")]
 [assembly: System.Reflection.AssemblyTitleAttribute("resQbackEnd")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
